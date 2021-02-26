@@ -75,9 +75,9 @@ app.put('/:id/updateUser', (req, res) => {
         });
 });
 //get data based on id
-// app.get('/:id/getUser',(req,res)=>{
-//     db.collection('user').find({ _id : ObjectId(req.params.id)}).toArray((err,result)=>{
-//         if(err) throw err;
-//         res.send(result);
-//     })
-// })
+app.get('/:id/getUser',(req,res)=>{
+    db.collection('user').find({ _id : ObjectId(req.params.id)}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    })
+})
