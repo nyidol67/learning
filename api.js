@@ -60,7 +60,7 @@ app.delete('/deleteUser', (req, res) => {
         res.send("deleted");
     });
 });
-//update user based on names
+//update user based on id
 app.put('/:id/updateUser', (req, res) => {
     db.collection('user').updateOne({ _id : ObjectId(req.params.id)},
         {
