@@ -81,3 +81,6 @@ app.get('/:id/getUser',(req,res)=>{
         res.send(result);
     })
 })
+app.use('/login',(req,res)=>{
+    res.send({token:"test123"})
+})

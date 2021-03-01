@@ -18,16 +18,15 @@ function Home() {
     function handleDeleteClick(userId) {
         axios.delete(deleteUrl, { params: { _id: userId } })
             .then((response) => alert(response.data));
-
-        handleShowClick();
+        handleShow();
     }
     return (
         <>
        
         <br/>
-            <button onClick={handleShow}>show User table</button>
+            <button  style={{margin:20}} onClick={handleShow} className="btn btn-dark">show User table</button>
             <Link to="/create">
-                <button className="btn btn-dark" style={{margin:10}}>Create user Data</button>
+                <button className="btn btn-dark" style={{margin:20}}>Create user Data</button>
             </Link>
             {userData && <DisplayAllUser user={userData} handleDeleteClick={handleDeleteClick} />}
         </>
