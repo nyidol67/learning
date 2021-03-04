@@ -1,50 +1,93 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import './login.css';
+import React, { useEffect, useState } from 'react';
+import {Formik} from 'formik';
+import * as yup from "yup";
+import axios from 'axios';
 
-async function loginUser(credentials) {
-    return fetch('http://localhost:8900/login', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application.json'
-        },
-        body: JSON.stringify(credentials)
-    }).then(data => data.json());
-}
-function Login({ setToken }) {
-    const [userName, setUserName] = useState();
-    const [password, setPassword] = useState();
-    const handleSubmit = async e => {
-        e.preventDefault();
-        const token = await loginUser({
-            userName,
-            password
-        });
-        setToken(token);
+const validationSchema = yup.object({
+    mailid: yup.string().required("Required"),
+    password: yup.string().required("Required")
+  });
+function Login() {
+    axios.defaults.withCredentials= true;
+
+    const [message,setMessage] = useState("");
+    const [loginStatus,setLoginStatus] = useState(false);
+
+    const handleSubmit = (values) => {
+        axios.post('http://localhost:8900/login', values)
+            .then((response) => {
+                if (!response.data.auth) {
+                    setLoginStatus(false);
+                    setMessage(response.data.message);
+                } else {
+                    localStorage.setItem("token",response.data.token)
+                    setMessage("");
+                    setLoginStatus(true);
+                }
+            });
     }
+    useEffect(()=>{
+        axios.get('http://localhost:8900/login')
+        .then((response)=>{
+            if(response.data.loggedIn == true)
+            {
+                
+                setLoginStatus(true);
+            }
+        }
+        )},[])
+
+        const userAuthenticated=()=>{
+            axios.get('http://localhost:8900/isUserAuthenticated',{
+                headers:{"x-access-token":localStorage.getItem("token")},
+        })
+            .then((response)=>{console.log(response)})
+        }
     return (
         <>
-            <div className="login-wrapper">
-                <h1>Please log in</h1>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        <p>UserName</p>
-                        <input type="text" onChange={e => setUserName(e.target.value)} />
-                    </label>
-                    <label>
-                        <p>Password</p>
-                        <input type="password" onChange={e => setPassword(e.target.value)} />
-                    </label>
-                    <div>
-                        <button type="submit">Submit</button>
-                    </div>
-                </form>
-            </div>
+            <div className="container">
+                <h1><center>Please log in</center></h1>
+                <Formik
+                    initialValues={{ mailid: "", password: "" }}
+                    validationSchema={validationSchema}
+                    onSubmit={values => {
+                        handleSubmit(values);
+                    }}
+                >
+                    {({ handleSubmit, handleChange, values, errors }) => (
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>Name:</label>
+                                <input
+                                    type="text"
+                                    onChange={handleChange}
+                                    value={values.mailid}
+                                    name="mailid"
+                                    className="form-control"
+                                />
+                            </div>
+                            {errors.mailid}
+                            <br />
+                            <div className="form-group">
+                                <label>password:</label>
+                                <input
+                                    type="password"
+                                    onChange={handleChange}
+                                    value={values.password}
+                                    name="password"
+                                    className="form-control"
+                                />
+                            </div>
+                            {errors.password}
+                            <br />
+                            {message}
+                            <button className="btn btn-success" type="submit">Submit</button>
+                            {loginStatus && <p>Authorized</p>}
+                        </form>
+                    )}
+                </Formik>
+            </div>   
         </>
     )
-}
-
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
 }
 export default Login;
