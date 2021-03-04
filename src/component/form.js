@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
-import { func } from 'prop-types';
+
 
 const addUrl = 'http://localhost:8900/addUser';
 const url = 'http://localhost:8900/'
@@ -10,12 +10,16 @@ const url = 'http://localhost:8900/'
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
   mobile: yup.string().required("Required"),
-  address: yup.string().required("Required")
+  address: yup.string().required("Required"),
+  mailid: yup.string().required("Required"),
+  password: yup.string().required("Required")
 });
 function Form(props) {
   const [Username, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [address, setAddress] = useState("");
+  const [mailid, setMailid] = useState("");
+  const [password, setPassword] = useState("");
   
     function func(){
       if(props.type == "edit"){
@@ -24,6 +28,8 @@ function Form(props) {
             setName(response.data[0].name);
             setMobile(response.data[0].mobile);
             setAddress(response.data[0].address);
+            setMailid(response.data[0].mailid);
+            setPassword(response.data[0].password);
           });
         }
     }
@@ -44,7 +50,7 @@ function Form(props) {
       <h1><center>Fill the Forms{func()}</center></h1>
       <Formik
         enableReinitialize={true}
-        initialValues={{name:Username,mobile:mobile,address:address}}
+        initialValues={{name:Username,mobile:mobile,address:address,mailid:mailid,password:password}}
         validationSchema={validationSchema}
         onSubmit={values => {
           createOrUpdate(values);
@@ -90,6 +96,31 @@ function Form(props) {
 
             {errors.address}
             <br />
+            <div className="form-group">
+              <label>mail id:</label>
+              <input
+                type="text"
+                onChange={handleChange}
+                value={values.mailid}
+                name="mailid"
+                className="form-control"
+              />
+            </div>
+
+            {errors.mailid}
+            <br/>
+            <div className="form-group">
+              <label>password:</label>
+              <input
+                type="text"
+                onChange={handleChange}
+                value={values.password}
+                name="password"
+                className="form-control"
+              />
+            </div>
+
+            {errors.password}
             <button className="btn btn-success" type="submit">Submit</button>
           </form>
         )}

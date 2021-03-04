@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 function DisplayAllUser(props) {
     return (
         <>
-
             <h3 style={{ color: "grey" }}><center>List of Users</center></h3>
             <table className="table table-bordered">
                 <thead>
@@ -12,6 +11,7 @@ function DisplayAllUser(props) {
                         <th>Name</th>
                         <th>Mobile Number</th>
                         <th>Address</th>
+                        <th>mailid</th>
                         <th>Function</th>
                     </tr>
 
@@ -24,6 +24,7 @@ function DisplayAllUser(props) {
                                 <td>{item.name}</td>
                                 <td>{item.mobile}</td>
                                 <td>{item.address}</td>
+                                <td>{item.mailid}</td>
                                 <td>
                                     <ul className="list-inline m-0">
                                         <li className="list-inline-item">
