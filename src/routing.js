@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Header from './component/header';
 import Create from './home/create';
@@ -17,8 +17,7 @@ function Routing() {
                 <Route exact path="/dashboard" component={Dashboard}></Route>
                 <Route exact path="/create" component={Create}></Route>
                 <Route exact path="/login" component={Login}></Route>
-                <Route exact path="/:id/edit" component={Edit}></Route>
-                
+                <Route exact path="/:id/edit" component={Edit}></Route> 
             </>
         </BrowserRouter>
     )

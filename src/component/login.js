@@ -11,7 +11,7 @@ const validationSchema = yup.object({
 function Login() {
     const History = useHistory();
     axios.defaults.withCredentials= true;
-    const [token,setToken] = useState(null);
+    const [token,setToken] = useState(localStorage.getItem("token"));
     const [message,setMessage] = useState("");
 
     const handleSubmit = (values) => {
@@ -66,7 +66,7 @@ function Login() {
                             <br />
                             {message}
                             <button className="btn btn-success" type="submit">Submit</button>
-                            {token ? <p>Authorized</p> :<p>Unauthorized</p>}
+                            {token && History.push("/dashboard")}
                         </form>
                     )}
                 </Formik>

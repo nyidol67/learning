@@ -8,8 +8,7 @@ const app = express();
 let mongourl = "mongodb://localhost:27017";
 var db;
 var ObjectId = Mongo.ObjectId;
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
+
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -20,18 +19,10 @@ app.use(cors({
     methods: ["GET", "POST","DELETE","PUT"],
     credentials: true
 }));
-app.use(cookieParser())
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({
-    key: "userId",
-    secret: "subcribe",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 60 * 60 * 24,
-    }
-}))
+
 
 MongoClient.connect(mongourl, (err, client) => {
     if (err) throw err;
@@ -71,8 +62,8 @@ app.post('/addUser', (req, res) => {
     });
 });
 
-const verifyJWT = (req,res,next)=>{
-    const token = req.headers["x-access-token"]
+const verifyJWT = (req,res,next) => {
+    const token = req.headers["x-access-token"];
     if(!token){
         res.send("you need to first log in");
     } else{
@@ -155,7 +146,6 @@ app.post('/login', (req, res) => {
                     const token = jwt.sign({id},config.secret,{
                         expiresIn:300,
                     })
-                    req.session.user = result;
                     res.json({
                         auth:true,
                         token:token,

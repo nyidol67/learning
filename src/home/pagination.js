@@ -19,7 +19,7 @@ const Pagination = ({userPerPage,totalUser, currentPage, paginate}) => {
                     <button onClick = {()=>paginate(currentPage)} className="page-link">{currentPage}</button>
                 </li>
                 <li className="page-item">
-                    <button onClick = {()=>paginate(currentPage+1)} className="page-link" disabled={currentPage >= totalUser}>next</button>
+                    <button onClick = {()=>paginate(currentPage+1)} className="page-link" disabled={currentPage >= Math.ceil(totalUser / userPerPage)}>next</button>
                 </li>
             </ul>
         </nav>
