@@ -82,7 +82,7 @@ function Login() {
                             <br />
                             {message}
                             <button className="btn btn-success" type="submit">Submit</button>
-                            {loginStatus && <p>Authorized</p>}
+                            {localStorage.getItem("token") ? <p>Authorized</p> :<p>Unauthorized</p>}
                         </form>
                     )}
                 </Formik>

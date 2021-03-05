@@ -83,19 +83,19 @@ const verifyJWT = (req,res,next)=>{
                     message: "you failed to authenticate"
                 })
             }else {
-                req.userId= decoded.id;
+                res.userId= decoded.id;
                 next();
             }
         })
     }
 }
 app.get('/showUser',verifyJWT, (req, res) => {
-    db.collection('user').find({_id:ObjectId(req.userId)}).toArray((err, result) => {
+    db.collection('user').find({_id:ObjectId(res.userId)}).toArray((err, result) => {
         if (err) throw err;
         res.send(result);
     });
 });
-app.get('/showUserAll',verifyJWT, (req, res) => {
+app.get('/showUserAll', (req, res) => {
     db.collection('user').find().toArray((err, result) => {
         if (err) throw err;
         res.send(result);
@@ -178,7 +178,6 @@ app.post('/login', (req, res) => {
         }
     })
 })
-
 
 app.get('/isUserAuthenticated',verifyJWT,(req,res)=>{
   res.send("User is authenticated");  

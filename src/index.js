@@ -5,8 +5,7 @@ import Routing from './routing';
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Routing/>
-  </React.StrictMode>,
+  
+    <Routing/>,
   document.getElementById('root')
 );

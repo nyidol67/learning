@@ -15,7 +15,7 @@ function Routing() {
             <>
                 <Header />
                 <Route exact path="/" component={Dashboard}></Route>
-                <Route exact path="/home" component={Home}></Route>
+                {/* <Route exact path="/home" component={Home}></Route> */}
                 <Route exact path="/create" component={Create}></Route>
                 <Route exact path="/login" component={Login}></Route>
                 <Route exact path="/:id/edit" component={Edit}></Route>

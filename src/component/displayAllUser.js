@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 function DisplayAllUser(props) {
+    const user = props.user;
     return (
         <>
             <h3 style={{ color: "grey" }}><center>List of Users</center></h3>
@@ -17,7 +18,7 @@ function DisplayAllUser(props) {
 
                 </thead>
                 <tbody>
-                    {props.user.map((item) => {
+                    {user.map((item) => {
                         return (
                             <tr>
                                 <td>{item._id}</td>
