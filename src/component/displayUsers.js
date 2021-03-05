@@ -1,5 +1,5 @@
 import React from 'react';
-import reactDOM from 'react-dom';
+
 function DisplayUser(props){
     const {name, mobile, address} = props.user;
     return(<>

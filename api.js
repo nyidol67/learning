@@ -75,7 +75,7 @@ const verifyJWT = (req,res,next)=>{
     const token = req.headers["x-access-token"]
     if(!token){
         res.send("you need to first log in");
-    }else{
+    } else{
         jwt.verify(token,config.secret,(err,decoded)=>{
             if(err){
                 res.json({
@@ -141,14 +141,7 @@ app.get('/getUser/:mailid', (req, res) => {
         res.send(result);
     })
 })
-//authorization
-app.get('/login', (req, res) => {
-    if (req.session.user) {
-        res.send({ loggedIn: true, user: req.session.user });
-    } else {
-        res.send({ loggedIn: false });
-    }
-})
+
 //Login authentication
 app.post('/login', (req, res) => {
     const mailid = req.body.mailid;
@@ -179,6 +172,3 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.get('/isUserAuthenticated',verifyJWT,(req,res)=>{
-  res.send("User is authenticated");  
-})

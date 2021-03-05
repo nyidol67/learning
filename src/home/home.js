@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DisplayAllUser from '../component/displayAllUser';
 import Pagination from './pagination';
+import {useHistory} from 'react-router-dom';
 
 const userUrl = 'http://localhost:8900/showUser';
 const deleteUrl = 'http://localhost:8900/deleteUser';
 const userAllUrl = 'http://localhost:8900/showUserAll';
 
 function Home() {
-    console.log("re-render");
+    const History = useHistory();
     const [userData, setUserData] = useState(null);
     const [userDataFull, setUserDataFull] = useState(null);
     const [userPerPage] = useState(1);
@@ -46,6 +47,7 @@ function Home() {
 
     function handleLogout() {
         localStorage.removeItem('token');
+        History.push("/");
     }
  
     let indexOfLastUser = userPerPage * currentPage;

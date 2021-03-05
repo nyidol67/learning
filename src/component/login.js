@@ -2,47 +2,31 @@ import React, { useEffect, useState } from 'react';
 import {Formik} from 'formik';
 import * as yup from "yup";
 import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
 const validationSchema = yup.object({
     mailid: yup.string().required("Required"),
     password: yup.string().required("Required")
   });
 function Login() {
+    const History = useHistory();
     axios.defaults.withCredentials= true;
-
+    const [token,setToken] = useState(null);
     const [message,setMessage] = useState("");
-    const [loginStatus,setLoginStatus] = useState(false);
 
     const handleSubmit = (values) => {
         axios.post('http://localhost:8900/login', values)
             .then((response) => {
                 if (!response.data.auth) {
-                    setLoginStatus(false);
                     setMessage(response.data.message);
                 } else {
                     localStorage.setItem("token",response.data.token)
+                    setToken(response.data.token);
                     setMessage("");
-                    setLoginStatus(true);
+                    History.push("/dashboard");
                 }
             });
     }
-    useEffect(()=>{
-        axios.get('http://localhost:8900/login')
-        .then((response)=>{
-            if(response.data.loggedIn == true)
-            {
-                
-                setLoginStatus(true);
-            }
-        }
-        )},[])
-
-        const userAuthenticated=()=>{
-            axios.get('http://localhost:8900/isUserAuthenticated',{
-                headers:{"x-access-token":localStorage.getItem("token")},
-        })
-            .then((response)=>{console.log(response)})
-        }
     return (
         <>
             <div className="container">
@@ -82,7 +66,7 @@ function Login() {
                             <br />
                             {message}
                             <button className="btn btn-success" type="submit">Submit</button>
-                            {localStorage.getItem("token") ? <p>Authorized</p> :<p>Unauthorized</p>}
+                            {token ? <p>Authorized</p> :<p>Unauthorized</p>}
                         </form>
                     )}
                 </Formik>
