@@ -6,6 +6,7 @@ import Edit from './home/edit';
 import Dashboard from './component/dashboard'
 import Login from './component/login';
 import LoginDashboard from './component/loginDashboard';
+import ChangePasswordForm from './home/changePasswordForm';
 
 function Routing() {
     
@@ -16,6 +17,7 @@ function Routing() {
                 <Route exact path="/" component={LoginDashboard}></Route>
                 <Route exact path="/dashboard" component={Dashboard}></Route>
                 <Route exact path="/create" component={Create}></Route>
+                <Route exact path="/changePassword" component={ChangePasswordForm}></Route>
                 <Route exact path="/login" component={Login}></Route>
                 <Route exact path="/:id/edit" component={Edit}></Route> 
             </>

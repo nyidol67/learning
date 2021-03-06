@@ -16,7 +16,7 @@ const config = { 'secret': 'supersecret' }
 
 app.use(cors({
     origin: ['http://localhost:3000'],
-    methods: ["GET", "POST","DELETE","PUT"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true
 }));
 
@@ -62,30 +62,60 @@ app.post('/addUser', (req, res) => {
     });
 });
 
-const verifyJWT = (req,res,next) => {
+const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"];
-    if(!token){
+    if (!token) {
         res.send("you need to first log in");
-    } else{
-        jwt.verify(token,config.secret,(err,decoded)=>{
-            if(err){
+    } else {
+        jwt.verify(token, config.secret, (err, decoded) => {
+            if (err) {
                 res.json({
                     auth: false,
                     message: "you failed to authenticate"
                 })
-            }else {
-                res.userId= decoded.id;
+            } else {
+                res.userId = decoded.id;
                 next();
             }
         })
     }
 }
-app.get('/showUser',verifyJWT, (req, res) => {
-    db.collection('user').find({_id:ObjectId(res.userId)}).toArray((err, result) => {
+app.get('/showUser', verifyJWT, (req, res) => {
+    db.collection('user').find({ _id: ObjectId(res.userId) }).toArray((err, result) => {
         if (err) throw err;
         res.send(result);
     });
 });
+
+app.put('/changePassword',verifyJWT, (req, res) => {
+    let oldPassword = req.body.oldPassword;
+    let newPassword = req.body.newPassword;
+    let newHashedPassword = bcrypt.hashSync(newPassword, 8);
+    db.collection('user').find({ _id: ObjectId(res.userId) }).toArray((err, result) => {
+        if (err) throw err;
+        else {
+            bcrypt.compare(oldPassword, result[0].password, (err, response)=>{
+                if(response){
+                   db.collection('user').updateOne({ _id: ObjectId(res.userId)},{
+                       $set:{
+                           password: newHashedPassword
+                       }
+                   },(err,result)=>{
+                       if(err) throw err;
+                       res.json({isMatched:true, message:"password updated" })
+                   }
+                 )}else {
+                    res.json({
+                        isMatched: false,
+                        message: "wrong old password"
+                    })
+                }
+            })
+
+        }
+    })
+})
+
 app.get('/showUserAll', (req, res) => {
     db.collection('user').find().toArray((err, result) => {
         if (err) throw err;
@@ -94,7 +124,7 @@ app.get('/showUserAll', (req, res) => {
 });
 
 //delete user based on id
-app.delete('/deleteUser',(req, res) => {
+app.delete('/deleteUser', (req, res) => {
     console.log(req.query._id)
     db.collection('user').deleteOne({ _id: ObjectId(req.query._id) }, (err, result) => {
 
@@ -112,7 +142,7 @@ app.put('/:id/updateUser', (req, res) => {
                 mobile: req.body.mobile,
                 address: req.body.address,
                 mailid: req.body.mailid,
-                password:hashed
+                password: hashed
             }
         }, (err, result) => {
             if (err) throw err;
@@ -143,21 +173,21 @@ app.post('/login', (req, res) => {
             bcrypt.compare(password, result[0].password, (err, response) => {
                 if (response) {
                     const id = result[0]._id;
-                    const token = jwt.sign({id},config.secret,{
-                        expiresIn:300,
+                    const token = jwt.sign({ id }, config.secret, {
+                        expiresIn: 300,
                     })
                     res.json({
-                        auth:true,
-                        token:token,
-                        result:result
+                        auth: true,
+                        token: token,
+                        result: result
                     });
                 } else {
-                    res.json({ auth:false, message: "Wrong Usernames/password Combination" })
+                    res.json({ auth: false, message: "Wrong Usernames/password Combination" })
                 }
             })
         }
         else {
-            res.json({auth: false, message: "User doesnot exist" });
+            res.json({ auth: false, message: "User doesnot exist" });
         }
     })
 })

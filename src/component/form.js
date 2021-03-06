@@ -3,9 +3,8 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
 
-
 const addUrl = 'http://localhost:8900/addUser';
-const url = 'http://localhost:8900/'
+const url = 'http://localhost:8900/';
 
 const validationSchema = yup.object({
   name: yup.string().required("Required"),
@@ -19,8 +18,8 @@ function Form(props) {
   const [mobile, setMobile] = useState("");
   const [address, setAddress] = useState("");
   const [mailid, setMailid] = useState("");
-  const [password, setPassword] = useState("");
   
+  let formValue = {name:"",mobile:"",address:"",mailid:"",password:""}
     function func(){
       if(props.type == "edit"){
         axios.get(url + `${props.id}` + '/getUser')
@@ -29,28 +28,28 @@ function Form(props) {
             setMobile(response.data[0].mobile);
             setAddress(response.data[0].address);
             setMailid(response.data[0].mailid);
-            setPassword(response.data[0].password);
           });
+          formValue = {name:Username,mobile:mobile,address:address,mailid:mailid}
         }
-    }
-    
+    }  
   function createOrUpdate(value) {
     if (props.type == "create") {
       axios.post(addUrl, value)
         .then((response) => alert("User data succesfully added"));
+        History.push("/");
     }
     else if (props.type == "edit") {
       axios.put(url + `${props.id}` + '/updateUser', value)
         .then((response) => alert("User data succesfully updated"));
+        History.push("/dashboard");
     }
   }
- 
   return (
     <div className="container">
       <h1><center>Fill the Forms{func()}</center></h1>
       <Formik
         enableReinitialize={true}
-        initialValues={{name:Username,mobile:mobile,address:address,mailid:mailid,password:password}}
+        initialValues={formValue}
         validationSchema={validationSchema}
         onSubmit={values => {
           createOrUpdate(values);
@@ -80,7 +79,6 @@ function Form(props) {
                 className="form-control"
               />
             </div>
-
             {errors.mobile}
             <br />
             <div className="form-group">
@@ -106,9 +104,9 @@ function Form(props) {
                 className="form-control"
               />
             </div>
-
             {errors.mailid}
             <br/>
+            {props.type == "create" && 
             <div className="form-group">
               <label>password:</label>
               <input
@@ -119,8 +117,8 @@ function Form(props) {
                 className="form-control"
               />
             </div>
-
-            {errors.password}
+            }
+            {props.type == "create" && errors.password}
             <button className="btn btn-success" type="submit">Submit</button>
           </form>
         )}
@@ -128,4 +126,4 @@ function Form(props) {
     </div>
   );
 }
-export default Form; 
+export default Form;
