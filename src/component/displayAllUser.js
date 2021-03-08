@@ -20,12 +20,12 @@ function DisplayAllUser(props) {
                 <tbody>
                     {user.map((item) => {
                         return (
-                            <tr>
-                                <td>{item._id}</td>
-                                <td>{item.name}</td>
-                                <td>{item.mobile}</td>
-                                <td>{item.address}</td>
-                                <td>{item.mailid}</td>
+                            <tr key="item._id">
+                                <td >{item._id}</td>
+                                <td >{item.name}</td>
+                                <td >{item.mobile}</td>
+                                <td >{item.address}</td>
+                                <td >{item.mailid}</td>
                                 <td>
                                     <ul className="list-inline m-0">
                                         <li className="list-inline-item">

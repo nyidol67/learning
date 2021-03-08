@@ -9,7 +9,6 @@ let mongourl = "mongodb://localhost:27017";
 var db;
 var ObjectId = Mongo.ObjectId;
 
-
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 const config = { 'secret': 'supersecret' }
@@ -22,7 +21,6 @@ app.use(cors({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 MongoClient.connect(mongourl, (err, client) => {
     if (err) throw err;
@@ -84,27 +82,29 @@ app.get('/showUser', verifyJWT, (req, res) => {
     db.collection('user').find({ _id: ObjectId(res.userId) }).toArray((err, result) => {
         if (err) throw err;
         res.send(result);
+
     });
 });
 
-app.put('/changePassword',verifyJWT, (req, res) => {
+app.put('/changePassword', verifyJWT, (req, res) => {
     let oldPassword = req.body.oldPassword;
     let newPassword = req.body.newPassword;
     let newHashedPassword = bcrypt.hashSync(newPassword, 8);
     db.collection('user').find({ _id: ObjectId(res.userId) }).toArray((err, result) => {
         if (err) throw err;
         else {
-            bcrypt.compare(oldPassword, result[0].password, (err, response)=>{
-                if(response){
-                   db.collection('user').updateOne({ _id: ObjectId(res.userId)},{
-                       $set:{
-                           password: newHashedPassword
-                       }
-                   },(err,result)=>{
-                       if(err) throw err;
-                       res.json({isMatched:true, message:"password updated" })
-                   }
-                 )}else {
+            bcrypt.compare(oldPassword, result[0].password, (err, response) => {
+                if (response) {
+                    db.collection('user').updateOne({ _id: ObjectId(res.userId) }, {
+                        $set: {
+                            password: newHashedPassword
+                        }
+                    }, (err, result) => {
+                        if (err) throw err;
+                        res.json({ isMatched: true, message: "password updated" })
+                    }
+                    )
+                } else {
                     res.json({
                         isMatched: false,
                         message: "wrong old password"
@@ -116,12 +116,43 @@ app.put('/changePassword',verifyJWT, (req, res) => {
     })
 })
 
+//middleware for pagination.
+const paginatedResults = (req, res, next) => {
+
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    let results= {};
+    db.collection('user').find().toArray((err, result) => {
+        if (err) throw err;
+        endIndex >= result.length ?results.next = false :results.next = true;
+        startIndex <= 1 ?results.previous = false :results.previous = true;
+        results.total = result.length;
+        results.result = result.slice(startIndex, endIndex);
+        res.paginate = results;
+        next();
+    })
+    
+}
+
+app.get('/user', paginatedResults , (req, res) => {
+    res.send(res.paginate);
+})
 app.get('/showUserAll', (req, res) => {
     db.collection('user').find().toArray((err, result) => {
         if (err) throw err;
         res.send(result);
+
     });
+
 });
+
+
+
+
+
 
 //delete user based on id
 app.delete('/deleteUser', (req, res) => {
@@ -191,4 +222,6 @@ app.post('/login', (req, res) => {
         }
     })
 })
+//middleware for pagination of a value.
+
 

@@ -35,7 +35,7 @@ const users = [
             const startIndex = (page-1)* limit;
             const endIndex = page*limit;
 
-            const results={};
+            results={};
             if(endIndex < models.length){
                 results.next={
                 page:page+1,

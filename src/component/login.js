@@ -19,6 +19,7 @@ function Login() {
             .then((response) => {
                 if (!response.data.auth) {
                     setMessage(response.data.message);
+                    History.push("/");
                 } else {
                     localStorage.setItem("token",response.data.token)
                     setToken(response.data.token);
