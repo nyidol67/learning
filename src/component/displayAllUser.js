@@ -18,9 +18,9 @@ function DisplayAllUser(props) {
 
                 </thead>
                 <tbody>
-                    {user.map((item) => {
+                    {user.map((item,i) => {
                         return (
-                            <tr key="item._id">
+                            <tr key={i}>
                                 <td >{item._id}</td>
                                 <td >{item.name}</td>
                                 <td >{item.mobile}</td>
@@ -29,10 +29,10 @@ function DisplayAllUser(props) {
                                 <td>
                                     <ul className="list-inline m-0">
                                         <li className="list-inline-item">
-                                            <Link to={'/'}><button className="btn btn-danger btn-sm rounded-0" value={item._id} onClick={(e) => { props.handleDeleteClick(e.currentTarget.value) }}><i class="fa fa-trash"></i></button></Link>
+                                            <Link to={'/'}><button className="btn btn-danger btn-sm rounded-0" value={item._id} onClick={(e) => { props.handleDeleteClick(e.currentTarget.value) }}><i className="fa fa-trash"></i></button></Link>
                                         </li>
                                         <li className="list-inline-item">
-                                            <Link to={`/${item._id}/edit`}><button className="btn btn-primary btn-sm rounded-0" value={item._id}><i class="fa fa-edit"></i></button></Link>
+                                            <Link to={`/${item._id}/edit`}><button className="btn btn-primary btn-sm rounded-0" value={item._id}><i className="fa fa-edit"></i></button></Link>
                                         </li>
                                     </ul>
                                 </td>

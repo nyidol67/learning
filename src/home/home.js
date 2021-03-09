@@ -29,10 +29,9 @@ function Home() {
                 setCanNext(response.data.next);
                 setCanPrev(response.data.previous);
                 setTotal(response.data.total);
-                console.log("inside useEffect");
             })
 
-    }, [currentPage,userPerPage]);
+    },[currentPage,userPerPage]);
 
     function handleShow() {
         axios.get(userUrl, {
@@ -63,7 +62,6 @@ function Home() {
 
     return (
         <>
-            {console.log("inside render")}
             <br />
             <button onClick={handleShow} className="btn btn-dark">My Info</button>
             <button className="btn btn-dark" onClick={handleLogout} style={{ margin: 20 }}>Logout</button>

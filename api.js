@@ -125,12 +125,12 @@ const paginatedResults = (req, res, next) => {
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     let results= {};
-    db.collection('user').find().toArray((err, result) => {
+    db.collection('user').find().skip(startIndex).limit(limit).toArray((err, result) => {
         if (err) throw err;
-        endIndex >= result.length ?results.next = false :results.next = true;
-        startIndex <= 1 ?results.previous = false :results.previous = true;
-        results.total = result.length;
-        results.result = result.slice(startIndex, endIndex);
+        endIndex >= db.collection('user').count() ? results.next = false :results.next = true;
+        startIndex <= 1 ? results.previous = false : results.previous = true;
+        results.total = db.collection('user').count();
+        results.result = result;
         res.paginate = results;
         next();
     })
@@ -148,11 +148,6 @@ app.get('/showUserAll', (req, res) => {
     });
 
 });
-
-
-
-
-
 
 //delete user based on id
 app.delete('/deleteUser', (req, res) => {
@@ -193,7 +188,6 @@ app.get('/getUser/:mailid', (req, res) => {
         res.send(result);
     })
 })
-
 //Login authentication
 app.post('/login', (req, res) => {
     const mailid = req.body.mailid;
@@ -222,6 +216,3 @@ app.post('/login', (req, res) => {
         }
     })
 })
-//middleware for pagination of a value.
-
-
