@@ -30,7 +30,6 @@ function Home() {
                 setCanPrev(response.data.previous);
                 setTotal(response.data.total);
             })
-
     },[currentPage,userPerPage]);
 
     function handleShow() {
@@ -81,13 +80,12 @@ function Home() {
                     </li>
                 </ul>
             </nav>
-            <label htmlFor="quantity">Go to Page Number:</label>
-            <input type="number" id="quantity" name="quantity" min="1" max={Math.ceil(total / userPerPage)} onChange={e => paginate(e.target.value)} value={currentPage}></input>
+            <label htmlFor="quantity">Jump to</label>
+            <input type="number" id="quantity" name="quantity" min={1} max={Math.ceil(total / userPerPage)} onChange={e => paginate(e.target.value)} value={currentPage}></input>
             <br />
-            <label htmlFor="userPerPage">Select No. of User in a Page:</label>
-            <input type="number" id="userPerPage" name="userPerPage" min="1" max={total} onChange={e => setUserPerPage(e.target.value)} value={userPerPage}></input>
+            <label htmlFor="userPerPage">User per page</label>
+            <input type="number" id="userPerPage" name="userPerPage" min={1} max={total} onChange={e => setUserPerPage(e.target.value)} value={userPerPage}></input>   
         </>
     )
-
 }
 export default Home;

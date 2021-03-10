@@ -28,8 +28,8 @@ function Login() {
                 }
             });
     }
-    return (
-        <>
+    return ({token}?
+        <>  
             <div className="container">
                 <h1><center>Please log in</center></h1>
                 <Formik
@@ -67,12 +67,11 @@ function Login() {
                             <br />
                             {message}
                             <button className="btn btn-success" type="submit">Submit</button>
-                            {token && History.push("/dashboard")}
                         </form>
                     )}
                 </Formik>
-            </div>   
-        </>
+            </div> 
+        </> : History.push("/")
     )
 }
 export default Login;

@@ -8,12 +8,14 @@ function DisplayAllUser(props) {
             <table className="table table-bordered">
                 <thead>
                     <tr>
-                        <th>id</th>
+                        
                         <th>Name</th>
                         <th>Mobile Number</th>
                         <th>Address</th>
                         <th>mailid</th>
+                        <th>hobbies</th>
                         <th>Function</th>
+                        
                     </tr>
 
                 </thead>
@@ -21,11 +23,22 @@ function DisplayAllUser(props) {
                     {user.map((item,i) => {
                         return (
                             <tr key={i}>
-                                <td >{item._id}</td>
+                                
                                 <td >{item.name}</td>
                                 <td >{item.mobile}</td>
                                 <td >{item.address}</td>
                                 <td >{item.mailid}</td>
+                                <td>
+                                    <table>
+                                        <thead><tr><th>name</th><th>description</th></tr></thead>
+                                        <tbody>{item.hobbies.map((item,index)=>{return (
+                                            <tr key = {index}>
+                                                <td>{item.name}</td>
+                                                <td>{item.description}</td>
+                                            </tr>
+                                        )})}</tbody>
+                                    </table>
+                                </td>
                                 <td>
                                     <ul className="list-inline m-0">
                                         <li className="list-inline-item">

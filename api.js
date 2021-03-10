@@ -52,6 +52,7 @@ app.post('/addUser', (req, res) => {
         "mobile": req.body.mobile,
         "address": req.body.address,
         "mailid": req.body.mailid,
+        "hobbies":req.body.hobbies,
         "password": hashedPassword
     }
     db.collection('user').insertOne(userData, (err, result) => {
@@ -118,18 +119,21 @@ app.put('/changePassword', verifyJWT, (req, res) => {
 
 //middleware for pagination.
 const paginatedResults = (req, res, next) => {
-
+    let total;
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
-
+    db.collection('user').count((err,result)=>{
+        if(err) throw err;
+        total = result;
+    })
     const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+    
     let results= {};
     db.collection('user').find().skip(startIndex).limit(limit).toArray((err, result) => {
         if (err) throw err;
-        endIndex >= db.collection('user').count() ? results.next = false :results.next = true;
-        startIndex <= 1 ? results.previous = false : results.previous = true;
-        results.total = db.collection('user').count();
+        page >= Math.ceil(total/limit) ? results.next = false :results.next = true;
+        page <= 1 ? results.previous = false : results.previous = true;
+        results.total=total;
         results.result = result;
         res.paginate = results;
         next();
@@ -160,7 +164,6 @@ app.delete('/deleteUser', (req, res) => {
 });
 //update user based on id
 app.put('/:id/updateUser', (req, res) => {
-    const hashed = bcrypt.hashSync(req.body.password, 8);
     db.collection('user').updateOne({ _id: ObjectId(req.params.id) },
         {
             $set: {
@@ -168,7 +171,7 @@ app.put('/:id/updateUser', (req, res) => {
                 mobile: req.body.mobile,
                 address: req.body.address,
                 mailid: req.body.mailid,
-                password: hashed
+                hobbies: req.body.hobbies
             }
         }, (err, result) => {
             if (err) throw err;
@@ -182,12 +185,12 @@ app.get('/:id/getUser', (req, res) => {
         res.send(result);
     })
 })
-app.get('/getUser/:mailid', (req, res) => {
-    db.collection('user').find({ mailid: req.params.mailid }).toArray((err, result) => {
-        if (err) throw err;
-        res.send(result);
-    })
-})
+// app.get('/getUser/:mailid', (req, res) => {
+//     db.collection('user').find({ mailid: req.params.mailid }).toArray((err, result) => {
+//         if (err) throw err;
+//         res.send(result);
+//     })
+// })
 //Login authentication
 app.post('/login', (req, res) => {
     const mailid = req.body.mailid;
