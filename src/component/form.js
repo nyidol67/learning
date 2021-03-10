@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Formik,Form, FieldArray,Field} from "formik";
+import { Formik, Form, FieldArray, Field } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const addUrl = 'http://localhost:8900/addUser';
 const url = 'http://localhost:8900/';
@@ -21,19 +21,20 @@ function UForm(props) {
     address: yup.string().required("Required"),
     mailid: yup.string().required("Required"),
     password: yup.string().concat(props.type == "create" ? yup.string().required('Password is required') : null),
-    
+
   });
-  let  formValue;
-  if(props.type == "edit"){
-  formValue = {
-    name: Username, mobile: mobile, address: address, mailid: mailid,hobbies: hobbies
-  }}
-  else{
+  let formValue;
+  if (props.type == "edit") {
     formValue = {
-      name: "", mobile: "", address: "", mailid: "", password:"",hobbies: hobbies
+      name: Username, mobile: mobile, address: address, mailid: mailid, hobbies: hobbies
     }
   }
-  useEffect(()=>{
+  else {
+    formValue = {
+      name: "", mobile: "", address: "", mailid: "", password: "", hobbies: hobbies
+    }
+  }
+  useEffect(() => {
     if (props.type == "edit") {
       axios.get(url + `${props.id}` + '/getUser')
         .then((response) => {
@@ -45,7 +46,7 @@ function UForm(props) {
         });
       //formValue = { name: Username, mobile: mobile, address: address, mailid: mailid }
     }
-  },[]);
+  }, []);
 
   function createOrUpdate(value) {
     if (props.type == "create") {
@@ -57,15 +58,15 @@ function UForm(props) {
       axios.put(url + `${props.id}` + '/updateUser', value)
         .then((response) => alert("User data succesfully updated"));
       History.push("/dashboard");
-      
+
     }
   }
   return (
     <div className="container">
-      <h1><center>Fill the Forms</center></h1>
+      <h1><center>Fill the {props.type} Forms</center></h1>
       <Formik
         enableReinitialize={true}
-        initialValues={formValue }
+        initialValues={formValue}
         validationSchema={validationSchema}
         onSubmit={values => {
           createOrUpdate(values);
@@ -111,7 +112,7 @@ function UForm(props) {
             {errors.address}
             <br />
             <div className="form-group">
-              <label>mail id:</label>
+              <label>Mail ID:</label>
               <input
                 type="text"
                 onChange={handleChange}
@@ -124,7 +125,7 @@ function UForm(props) {
             <br />
             { props.type == "create" &&
               <div className="form-group">
-                <label>password:</label>
+                <label>Password:</label>
                 <input
                   type="text"
                   onChange={handleChange}
@@ -134,36 +135,48 @@ function UForm(props) {
                 />
               </div>
             }
-            {props.type=="create" && errors.password}
+            {props.type == "create" && errors.password}
             <label> Hobbies</label>
-           <FieldArray
-             name="hobbies"
-             render={arrayHelpers => (
-               <div>
-                 {
-                   values.hobbies.map((hobbies, index) => (
-                     <div key={index}>
-                       <label>name</label><Field name={`hobbies.${index}.name`}/>
-                       <label>description</label><Field name={`hobbies.${index}.description`} />
-                       <button
-                         type="button"
-                         onClick={() => arrayHelpers.remove(index)} // remove a hobbies from the list
-                       >
-                         -
+            <FieldArray
+              name="hobbies"
+              render={arrayHelpers => (
+                <div>
+                  {
+                    values.hobbies.map((hobbies, index) => (
+                      <div key={index} className="form-group row" >
+                        <div className="col-sm">
+                        <label>Name</label>
+                        <Field className="form-control" name={`hobbies.${index}.name`}/>
+                        </div>
+                        <div className="col-sm">
+                        <label>Description</label>
+                        <Field name={`hobbies.${index}.description`} className="form-control"/>
+                        </div>
+                        <div className="col-sm">
+                        <button
+                          style={{margin:30}}
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={() => arrayHelpers.remove(index)} // remove a hobbies from the list
+                        >
+                          -
                        </button>
-                       <button
-                         type="button"
-                         onClick={() => arrayHelpers.insert(index, '')}
-                       >
-                         +
+                        </div>
+
+                      </div>
+                    ))
+                  }
+                  <button
+                    type="button"
+                    className="btn btn-success"
+                    onClick={() => arrayHelpers.push({name:"",description:""})}
+                  >
+                    +
                        </button>
-                     </div>
-                   ))
-                 }
-                 
-               </div>
-             )}
-           />
+                </div>
+              )}
+            />
+            <br/>
             <button className="btn btn-success" type="submit">Submit</button>
           </form>
         )}

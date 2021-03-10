@@ -61,18 +61,22 @@ function Home() {
     // }
 
     return (
-        <>
+        <div className="container">
             <br />
             <button onClick={handleShow} className="btn btn-dark">My Info</button>
             <button className="btn btn-dark" onClick={handleLogout} style={{ margin: 20 }}>Logout</button>
             <Link to='/changePassword'><button className="btn btn-dark">Change Password</button></Link>
             {userData && <DisplayModal user={userData} setIsOpen={setIsOpen} isOpen={isOpen} />}
             <br />
-            <label htmlFor="quantity"><strong>Jump to</strong></label>
-            <input type="number" id="quantity" name="quantity" min={1} max={Math.ceil(total / userPerPage)} onChange={e => setCurrentPage(parseInt(e.target.value))} value={currentPage}></input>
-            
-            <label htmlFor="userPerPage"><strong>User per page</strong></label>
-            <input type="number" id="userPerPage" name="userPerPage" min={1} max={total} onChange={e => setUserPerPage(e.target.value)} value={userPerPage}></input>
+            <div className="row">
+                <div className="col-sm-3"> <label htmlFor="quantity"><strong>Jump to</strong></label>
+                    <input type="number" id="quantity" name="quantity" min={1} max={Math.ceil(total / userPerPage)} onChange={e => setCurrentPage(parseInt(e.target.value))} value={currentPage}></input>
+                </div>
+                <div className="col-sm-3"> <label htmlFor="userPerPage"><strong>User per page</strong></label>
+                    <input type="number" id="userPerPage" name="userPerPage" min={1} max={total} onChange={e => setUserPerPage(e.target.value)} value={userPerPage}></input>
+                </div>
+            </div>
+
             {userDataFull && <DisplayAllUser user={userDataFull} handleDeleteClick={handleDeleteClick} />}
             <nav>
                 <ul className="pagination">
@@ -88,7 +92,7 @@ function Home() {
                 </ul>
             </nav>
 
-        </>
+        </div>
     )
 }
 export default Home;
