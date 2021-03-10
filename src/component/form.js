@@ -43,7 +43,7 @@ function UForm(props) {
           setMailid(response.data[0].mailid);
           setHobbies(response.data[0].hobbies);
         });
-      formValue = { name: Username, mobile: mobile, address: address, mailid: mailid }
+      //formValue = { name: Username, mobile: mobile, address: address, mailid: mailid }
     }
   },[]);
 
