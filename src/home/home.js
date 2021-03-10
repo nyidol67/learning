@@ -30,7 +30,7 @@ function Home() {
                 setCanPrev(response.data.previous);
                 setTotal(response.data.total);
             })
-    },[currentPage,userPerPage]);
+    }, [currentPage, userPerPage]);
 
     function handleShow() {
         axios.get(userUrl, {
@@ -40,7 +40,7 @@ function Home() {
                 if (response) {
                     setUserData(response.data);
                 }
-                
+
             });
         setIsOpen(true);
     }
@@ -53,11 +53,12 @@ function Home() {
     function handleLogout() {
         localStorage.removeItem('token');
         History.push("/");
+
     }
 
-    function paginate(pageNumber) {
-        setCurrentPage(pageNumber);
-    }
+    // function paginate(pageNumber) {
+    //     setCurrentPage(pageNumber);
+    // }
 
     return (
         <>
@@ -66,25 +67,27 @@ function Home() {
             <button className="btn btn-dark" onClick={handleLogout} style={{ margin: 20 }}>Logout</button>
             <Link to='/changePassword'><button className="btn btn-dark">Change Password</button></Link>
             {userData && <DisplayModal user={userData} setIsOpen={setIsOpen} isOpen={isOpen} />}
+            <br />
+            <label htmlFor="quantity"><strong>Jump to</strong></label>
+            <input type="number" id="quantity" name="quantity" min={1} max={Math.ceil(total / userPerPage)} onChange={e => setCurrentPage(parseInt(e.target.value))} value={currentPage}></input>
+            
+            <label htmlFor="userPerPage"><strong>User per page</strong></label>
+            <input type="number" id="userPerPage" name="userPerPage" min={1} max={total} onChange={e => setUserPerPage(e.target.value)} value={userPerPage}></input>
             {userDataFull && <DisplayAllUser user={userDataFull} handleDeleteClick={handleDeleteClick} />}
             <nav>
                 <ul className="pagination">
                     <li className="page-item">
-                        <button onClick={() => paginate(currentPage - 1)} className="page-link" disabled={!canPrev}>Previous</button>
+                        <button onClick={() => setCurrentPage(currentPage - 1)} className="page-link" disabled={!canPrev}>Previous</button>
                     </li>
                     <li className="page-item">
-                        <button onClick={() => paginate(currentPage)} className="page-link">{currentPage}</button>
+                        <button onClick={() => setCurrentPage(currentPage)} className="page-link">{currentPage}</button>
                     </li>
                     <li className="page-item">
-                        <button onClick={() => paginate(currentPage + 1)} className="page-link" disabled={!canNext}>next</button>
+                        <button onClick={() => setCurrentPage(currentPage + 1)} className="page-link" disabled={!canNext}>next</button>
                     </li>
                 </ul>
             </nav>
-            <label htmlFor="quantity">Jump to</label>
-            <input type="number" id="quantity" name="quantity" min={1} max={Math.ceil(total / userPerPage)} onChange={e => paginate(e.target.value)} value={currentPage}></input>
-            <br />
-            <label htmlFor="userPerPage">User per page</label>
-            <input type="number" id="userPerPage" name="userPerPage" min={1} max={total} onChange={e => setUserPerPage(e.target.value)} value={userPerPage}></input>   
+
         </>
     )
 }
