@@ -33,7 +33,7 @@ function ChangePasswordForm() {
                 {({ handleSubmit, handleChange, values, errors }) => (
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label>Name:</label>
+                            <label>Old Password:</label>
                             <input
                                 type="text"
                                 onChange={handleChange}
@@ -45,7 +45,7 @@ function ChangePasswordForm() {
                         {errors.oldPassword}
                         <br />
                         <div className="form-group">
-                            <label>Mobile:</label>
+                            <label>New Password:</label>
                             <input
                                 type="text"
                                 onChange={handleChange}

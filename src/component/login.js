@@ -17,6 +17,7 @@ function Login() {
     const handleSubmit = (values) => {
         axios.post('http://localhost:8900/login', values)
             .then((response) => {
+                console.log(response);
                 if (!response.data.auth) {
                     setMessage(response.data.message);
                     History.push("/");
@@ -28,7 +29,7 @@ function Login() {
                 }
             });
     }
-    return ({token}?
+    return (
         <>  
             <div className="container">
                 <h1><center>Please log in</center></h1>
@@ -68,10 +69,12 @@ function Login() {
                             {message}
                             <button className="btn btn-success" type="submit">Submit</button>
                         </form>
+                        
                     )}
                 </Formik>
+                
             </div> 
-        </> : History.push("/")
+        </> 
     )
 }
 export default Login;

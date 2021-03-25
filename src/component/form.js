@@ -7,7 +7,6 @@ import { useHistory } from 'react-router-dom';
 const addUrl = 'http://localhost:8900/addUser';
 const url = 'http://localhost:8900/';
 
-
 function UForm(props) {
   const [Username, setName] = useState("");
   const [mobile, setMobile] = useState("");

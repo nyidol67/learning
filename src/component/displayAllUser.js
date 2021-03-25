@@ -55,8 +55,6 @@ function DisplayAllUser(props) {
                     }
                 </tbody>
             </table>
-
-
         </>
     )
 
